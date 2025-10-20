@@ -1,6 +1,7 @@
 import { index, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { users } from "../users";
 import { categories } from "../category";
+import { sql } from "drizzle-orm";
 
 export const expenses = pgTable('expenses', {
     id: uuid('id').primaryKey(),
@@ -10,6 +11,7 @@ export const expenses = pgTable('expenses', {
     amount: integer('amount').notNull(),
     spentAt: timestamp('spent_at').notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 }, (table) => ({
     spentAtIdx: index('spent_at_idx').on(table.spentAt),
     expNameIdx: index('expense_name_idx').on(table.name),

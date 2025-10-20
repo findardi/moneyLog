@@ -17,6 +17,9 @@ const EnvSchema = z.object({
 
   DEFAULT_USERNAME: z.string(),
   DEFAULT_PASSWORD: z.string(),
+
+  // external API
+  GROQ_API_KEY: z.string(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

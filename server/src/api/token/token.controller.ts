@@ -1,4 +1,4 @@
-import { AccessMiddleware } from "@/core/utils/middleware/access_middleware";
+import { AccessMiddleware } from "@/core/utils/middleware/access.middleware";
 import { JWTPayload } from "@/core/utils/middleware/jwt";
 import { Context, Hono } from "hono";
 import { tokenService } from "./token.service";
@@ -13,7 +13,7 @@ tokenRoute.post("/", accessMiddleware.authenticate, async (c: Context) => {
     const result = await tokenService.getActivatedToken(payload.username);
 
     return c.json(
-        Response.success("Token generated successfully", result, HTTP_STATUS.CREATED)
+        Response.success("Token generated successfully", HTTP_STATUS.CREATED, result)
     )
 })
 
@@ -22,7 +22,7 @@ tokenRoute.patch("/reset", accessMiddleware.authenticate, async (c: Context) => 
     const result = await tokenService.getResetToken(payload.username);
 
     return c.json(
-        Response.success("Token generated successfully", result, HTTP_STATUS.CREATED)
+        Response.success("Token generated successfully", HTTP_STATUS.CREATED, result)
     )
 })
 

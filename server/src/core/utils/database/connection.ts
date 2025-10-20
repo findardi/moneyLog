@@ -2,6 +2,7 @@ import postgres from "postgres";
 import env from "../env";
 import { drizzle } from "drizzle-orm/postgres-js";
 import logger from "../logger";
+import { sql } from "drizzle-orm";
 
 const connectionString = `postgresql://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`;
 
@@ -30,5 +31,20 @@ const client = postgres(connectionString, {
       : false,
 });
 const db = drizzle(client);
+
+// test connections
+export const testConnectionDB = async () => {
+  const clientTest = postgres(connectionString, { max: 1 });
+  const dbTest = drizzle(clientTest);
+  try {
+    await dbTest.execute(sql`select 1`);
+    logger.info("✅ Database connected!");
+  } catch (error) {
+    logger.error("❌ Database connection failed:", error);
+    process.exit(1)
+  } finally {
+    await clientTest.end();
+  }
+};
 
 export default db;
