@@ -1,6 +1,6 @@
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import Container from "../container";
-import { ValidationError } from "./error-handler";
+import { Conflict, Forbidden, NotFound, Unauthorized, ValidationError } from "./error-handler";
 import { Response } from "@/core/constant/api-response";
 import env from "../env";
 import { ZodError } from "zod";
@@ -35,7 +35,12 @@ const onError: ErrorHandler = (err, c) => {
     errorLog.errors = err.errors;
   }
 
-  logger.error(errorLog);
+  if (err instanceof Forbidden || err instanceof Unauthorized || err instanceof NotFound || err instanceof Conflict) {
+    logger.warn(errorLog);
+  } else {
+    logger.error(errorLog);
+  }
+       
 
   const { body } = Response.error(
     err.message,

@@ -3,6 +3,7 @@ import onError from './core/utils/error/on-error'
 import routeNotFound from './core/utils/error/on-notfound'
 import userRoute from './api/user/user.controller'
 import tokenRoute from './api/token/token.controller'
+import expenseRoute from './api/expense/expense.controller'
 
 const app = new Hono()
 
@@ -15,6 +16,9 @@ app.route("/api/user", userRoute)
 
 // token route
 app.route("/api/token", tokenRoute)
+
+// expense route
+app.route("/api/expense", expenseRoute)
 
 // handler route
 app.onError(onError)

@@ -8,8 +8,17 @@ interface BaseResponseData {
   timestamp: string;
 }
 
+interface Meta {
+  total?: number;
+  limit?: number;
+  offset?: number;
+  page?: number;
+  totalPages?: number;
+}
+
 interface SuccessResponse<T = any> extends BaseResponseData {
   data: T;
+  meta?: Meta;
 }
 
 interface ErrorResponse extends BaseResponseData {
@@ -29,17 +38,23 @@ export class Response {
    */
   static success<T = any>(
     message: string,
+    statusCode: number = HTTP_STATUS.OK,
     data: T,
-    statusCode: number = HTTP_STATUS.OK
+    meta?: Meta,
   ): { body: SuccessResponse<T>; statusCode: number } {
     if (env.NODE_ENV !== "PRODUCTION") {
       logger.info(`Success: ${message}`);
+    }
+
+    if (!meta) {
+      meta = undefined;
     }
     return {
       body: {
         success: true,
         message,
         data,
+        meta,
         timestamp: new Date().toISOString(),
       },
       statusCode,

@@ -4,3 +4,8 @@ export const tokenType = {
     RESET: "RESET",
     REFRESH: "REFRESH",
 } as const;
+
+export const userRole = {
+    USER: "USER",
+    ADMIN: "ADMIN",
+} as const;

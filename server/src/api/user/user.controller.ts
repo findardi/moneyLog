@@ -3,7 +3,7 @@ import { createUserSchema, loginUserSchema } from "./dto/user.create.dto";
 import { userService } from "./user.service";
 import { Response } from "@/core/constant/api-response";
 import { HTTP_STATUS } from "@/core/constant/http-code";
-import { AccessMiddleware } from "@/core/utils/middleware/access_middleware";
+import { AccessMiddleware } from "@/core/utils/middleware/access.middleware";
 import { JWTPayload } from "@/core/utils/middleware/jwt";
 import { tokenService } from "../token/token.service";
 import { BadRequest } from "@/core/utils/error/error-handler";
@@ -17,7 +17,7 @@ userRoute.post("/", async (c: Context) => {
     const result = await userService.create(data)
 
     return c.json(
-        Response.success("Success create user", result, HTTP_STATUS.CREATED)
+        Response.success("Success create user", HTTP_STATUS.CREATED, result)
     )
 })
 
@@ -27,7 +27,7 @@ userRoute.post("/login", async (c: Context) => {
     const result = await userService.login(data)
 
     return c.json(
-        Response.success("Success login user", result)
+        Response.success("Success login user", HTTP_STATUS.OK, result)
     )
 })
 
@@ -41,7 +41,7 @@ userRoute.patch("/activated", accessMiddleware.authenticate, async (c: Context) 
     const result = await tokenService.activatedUser(payload.username, token)
 
     return c.json(
-        Response.success("Success activate user", result)
+        Response.success("Success activate user", HTTP_STATUS.OK, result)
     )
 })
 
