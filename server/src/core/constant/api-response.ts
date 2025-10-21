@@ -74,7 +74,7 @@ export class Response {
     error: string,
     statusCode: number = HTTP_STATUS.INTERNAL_SERVER_ERROR,
     stack?: string,
-    errors?: Record<string, string[]>
+    errors?: Record<string, string[]>,
   ): { body: ErrorResponse; statusCode: number } {
     const errorResponse: ErrorResponse = {
       success: false,

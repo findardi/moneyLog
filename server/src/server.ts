@@ -6,14 +6,15 @@ import logger from "./core/utils/logger";
 const port = env.PORT || "3838";
 
 const setupServer = async () => {
-    await testConnectionDB()
-    const message = `server is running on port ${port}`;
-    env.NODE_ENV === "production" ? console.log(message) : logger.info(message);
-}
+  await testConnectionDB();
+  const message = `server is running on port ${port}`;
+  env.NODE_ENV === "production" ? console.log(message) : logger.info(message);
+};
 
-setupServer()
+setupServer();
 
 Bun.serve({
-    fetch:app.fetch,
-    port
-})
+  fetch: app.fetch,
+  port,
+  idleTimeout: 255,
+});
