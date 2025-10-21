@@ -1,0 +1,1 @@
+ALTER TYPE "public"."period_limit" ADD VALUE 'CUSTOM';

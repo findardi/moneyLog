@@ -9,21 +9,29 @@ const tokenRoute = new Hono();
 const accessMiddleware = new AccessMiddleware();
 
 tokenRoute.post("/", accessMiddleware.authenticate, async (c: Context) => {
-    const payload = c.get("payload") as JWTPayload;
-    const result = await tokenService.getActivatedToken(payload.username);
+  const payload = c.get("payload") as JWTPayload;
+  const result = await tokenService.getActivatedToken(payload.username);
 
-    return c.json(
-        Response.success("Token generated successfully", HTTP_STATUS.CREATED, result)
-    )
-})
+  return c.json(
+    Response.success(
+      "Token generated successfully",
+      HTTP_STATUS.CREATED,
+      result,
+    ),
+  );
+});
 
-tokenRoute.patch("/reset", accessMiddleware.authenticate, async (c: Context) => {
+tokenRoute.patch(
+  "/reset",
+  accessMiddleware.authenticate,
+  async (c: Context) => {
     const payload = c.get("payload") as JWTPayload;
     const result = await tokenService.getResetToken(payload.username);
 
     return c.json(
-        Response.success("Token generated successfully", HTTP_STATUS.CREATED, result)
-    )
-})
+      Response.success("Token reset successfully", HTTP_STATUS.CREATED, result),
+    );
+  },
+);
 
 export default tokenRoute;

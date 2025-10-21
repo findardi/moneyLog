@@ -50,6 +50,34 @@
       "when": 1760599302729,
       "tag": "0006_slimy_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1760942100390,
+      "tag": "0007_yellow_harpoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1760944407619,
+      "tag": "0008_lucky_doctor_faustus",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1760944546346,
+      "tag": "0009_flippant_venom",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1760948436440,
+      "tag": "0010_smart_wendell_rand",
+      "breakpoints": true
     }
   ]
 }
