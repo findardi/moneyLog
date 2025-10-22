@@ -97,9 +97,15 @@
                     <div class="card bg-base-100 shadow-xl">
                         <div class="card-body p-6 md:p-8">
                             {#if selectTab === "login"}
-                                <LoginComponent form={data.loginForm} />
+                                <LoginComponent
+                                    form={data.loginForm}
+                                    actions="?/login"
+                                />
                             {:else}
-                                <RegisterComponent form={data.registerForm} />
+                                <RegisterComponent
+                                    form={data.registerForm}
+                                    actions="?/register"
+                                />
                             {/if}
                         </div>
                     </div>

@@ -6,7 +6,7 @@
     let { children } = $props();
 </script>
 
-<Toaster richColors expand={true} />
+<Toaster richColors expand={true} position="bottom-left" />
 <svelte:head>
     <link rel="icon" href={favicon} />
 </svelte:head>
