@@ -1,5 +1,6 @@
 <script lang="ts">
     import { registerSchema, type registerDTO } from "$lib/schema/user.schema";
+    import type { ApiErrorResponse } from "$lib/utils/api-response.types";
     import { Control, Field, FieldErrors, Label } from "formsnap";
     import { toast } from "svelte-sonner";
     import { superForm, type SuperValidated } from "sveltekit-superforms";
@@ -20,27 +21,32 @@
         delayMs: 500,
         onResult: ({ result }) => {
             if (result.type === "redirect") {
-                toast.success("register Success");
+                toast.success("Register Success");
             } else if (result.type === "failure") {
-                const errors = result.data?.form.errors;
-                if (errors && typeof errors === "object") {
-                    for (const [field, messages] of Object.entries(errors)) {
-                        if (Array.isArray(messages)) {
-                            for (const message of messages) {
-                                toast.error(`${field}: ${message}`);
-                            }
-                        }
-                    }
-                } else if (result.data?.message) {
-                    toast.error(result.data.message);
-                } else {
-                    toast.error("An unknown error occurred.");
-                }
+                handleLoginFailure(result.data);
             }
         },
     });
 
     const { form: formData, enhance, delayed, submitting, reset } = form;
+
+    function handleLoginFailure(data: any) {
+        if (data?.apiError) {
+            const apiError = data.apiError as ApiErrorResponse;
+            toast.error(apiError.message, {
+                duration: 5000,
+            });
+            return;
+        }
+
+        let errorMessage = "Register failed";
+        if (typeof data?.message === "string") {
+            errorMessage = data.message;
+        } else if (data?.form?.message) {
+            errorMessage = data.form.message;
+        }
+        toast.error(errorMessage);
+    }
 
     function handleCancel() {
         reset();

@@ -22,12 +22,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email("Email is required"),
-  password: z
-    .string()
-    .regex(
-      strongPasswordRegex,
-      "Password must be at least 12 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-    ),
+  password: z.string().nonempty("Password is required"),
 });
 
 export type registerDTO = z.infer<typeof registerSchema>;
