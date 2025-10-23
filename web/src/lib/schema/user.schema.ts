@@ -25,5 +25,13 @@ export const loginSchema = z.object({
   password: z.string().nonempty("Password is required"),
 });
 
+export const activationSchema = z.object({
+  token: z
+    .string()
+    .nonempty("Token is required")
+    .min(6, "Token must be at least 6 characters long"),
+});
+
 export type registerDTO = z.infer<typeof registerSchema>;
 export type loginDTO = z.infer<typeof loginSchema>;
+export type activationDTO = z.infer<typeof activationSchema>;

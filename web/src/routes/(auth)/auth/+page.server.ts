@@ -80,7 +80,7 @@ export const actions = {
         secure: env.NODE_ENV === "production",
       });
 
-      redirect(303, "/");
+      throw redirect(303, "/");
     } catch (error) {
       if (isRedirect(error)) {
         throw error;
@@ -143,7 +143,7 @@ export const actions = {
         });
       }
 
-      redirect(303, "/");
+      return { form };
     } catch (error) {
       if (isRedirect(error)) {
         throw error;

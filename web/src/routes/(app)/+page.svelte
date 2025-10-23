@@ -1,3 +1,15 @@
-<script lang="ts"></script>
+<script lang="ts">
+    import { page } from "$app/state";
+    import BannerComponent from "$lib/components/app/BannerComponent.svelte";
+    import HomePageComponent from "$lib/components/app/HomePageComponent.svelte";
 
-<p class="text-3xl">Home Page</p>
+    const username = $derived(page.data.username || undefined);
+</script>
+
+<div class="w-full h-full flex items-center justify-center">
+    {#if username}
+        <HomePageComponent />
+    {:else}
+        <BannerComponent />
+    {/if}
+</div>

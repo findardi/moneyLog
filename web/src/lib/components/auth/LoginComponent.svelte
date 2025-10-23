@@ -54,82 +54,120 @@
     }
 </script>
 
-<div class="p-2">
-    <div class="card bg-none w-full h-full">
-        <form
-            method="post"
-            action={actions}
-            use:enhance
-            class="w-full space-y-4"
-        >
-            <div class="w-full space-y-2">
-                <Field {form} name="email">
-                    <Control>
-                        {#snippet children({ props })}
-                            <Label class="text-sm font-medium">Email</Label>
-                            <input
-                                type="text"
-                                class="input-bordered input w-full"
-                                placeholder="user@gmail.com"
-                                {...props}
-                                bind:value={$formData.email}
-                            />
-                        {/snippet}
-                    </Control>
-                    <FieldErrors class="mt-1 text-sm text-red-400" />
-                </Field>
+<div class="w-full">
+    <form method="post" action={actions} use:enhance class="w-full space-y-5">
+        <div class="w-full space-y-4">
+            <Field {form} name="email">
+                <Control>
+                    {#snippet children({ props })}
+                        <Label
+                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
+                            >Email</Label
+                        >
+                        <input
+                            type="text"
+                            class="w-full px-4 py-3 border-3 border-stone-900
+                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
+                                   transition-all duration-200 font-medium
+                                   placeholder:text-stone-400"
+                            placeholder="user@gmail.com"
+                            {...props}
+                            bind:value={$formData.email}
+                        />
+                    {/snippet}
+                </Control>
+                <FieldErrors class="mt-2 text-sm font-bold text-red-600" />
+            </Field>
 
-                <Field {form} name="password">
-                    <Control>
-                        {#snippet children({ props })}
-                            <Label class="text-sm font-medium">Password</Label>
-                            <input
-                                type="password"
-                                class="input-bordered input w-full"
-                                placeholder="password"
-                                {...props}
-                                bind:value={$formData.password}
-                            />
-                        {/snippet}
-                    </Control>
-                    <FieldErrors class="mt-1 text-sm text-red-400" />
-                </Field>
-            </div>
+            <Field {form} name="password">
+                <Control>
+                    {#snippet children({ props })}
+                        <Label
+                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
+                            >Password</Label
+                        >
+                        <input
+                            type="password"
+                            class="w-full px-4 py-3 border-3 border-stone-900
+                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
+                                   transition-all duration-200 font-medium
+                                   placeholder:text-stone-400"
+                            placeholder="password"
+                            {...props}
+                            bind:value={$formData.password}
+                        />
+                    {/snippet}
+                </Control>
+                <FieldErrors class="mt-2 text-sm font-bold text-red-600" />
+            </Field>
+        </div>
 
-            <div class="flex my-4">
-                <button
-                    class="btn btn-neutral w-full"
-                    type="submit"
-                    disabled={$submitting}
-                >
-                    {#if $submitting}
-                        <span class="loading loading-spinner"></span>
-                        Mengirim...
-                    {:else}
-                        Login
-                    {/if}
-                </button>
-                <!-- <button
-                    class="btn btn-outline btn-error"
-                    type="button"
-                    disabled={$submitting}
-                    onclick={handleCancel}
-                >
-                    Cancel
-                </button> -->
-            </div>
-        </form>
+        <div class="flex pt-2">
+            <button
+                class="w-full px-6 py-4 bg-stone-900 text-white font-bold text-base
+                       border-3 border-stone-900
+                       shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
+                       hover:shadow-[6px_6px_0px_0px_rgba(41,37,36,1)]
+                       hover:translate-x-[-2px] hover:translate-y-[-2px]
+                       transition-all duration-200
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       disabled:hover:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
+                       disabled:hover:translate-x-0 disabled:hover:translate-y-0
+                       uppercase tracking-wide"
+                type="submit"
+                disabled={$submitting}
+            >
+                {#if $submitting}
+                    <span class="flex items-center justify-center gap-2">
+                        <span class="loading loading-spinner loading-sm"></span>
+                        Sending...
+                    </span>
+                {:else}
+                    Login →
+                {/if}
+            </button>
+        </div>
+    </form>
 
-        <div class="divider"></div>
-        <div class="my-2">
-            <p class="text-sm text-center text-gray-600">
-                By clicking "Login", you agree to our
-                <a href="/terms" class="link link-primary"
-                    >Terms and Conditions</a
-                >
-                and
-                <a href="/privacy" class="link link-primary">Privacy Policy</a>.
-            </p>
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t-3 border-stone-900"></div>
+        </div>
+        <div class="relative flex justify-center">
+            <span
+                class="bg-white px-4 text-sm font-bold text-stone-900 uppercase"
+            >
+                Terms
+            </span>
         </div>
     </div>
+
+    <div class="mt-4">
+        <p
+            class="text-xs text-center text-stone-600 font-medium leading-relaxed"
+        >
+            By clicking "Login", you agree to our
+            <a
+                href="/terms"
+                class="font-bold text-stone-900 hover:underline decoration-2 underline-offset-2"
+                >Terms and Conditions</a
+            >
+            and
+            <a
+                href="/privacy"
+                class="font-bold text-stone-900 hover:underline decoration-2 underline-offset-2"
+                >Privacy Policy</a
+            >.
+        </p>
+    </div>
 </div>
+
+<style>
+    .border-3 {
+        border-width: 3px;
+    }
+
+    .border-t-3 {
+        border-top-width: 3px;
+    }
+</style>
