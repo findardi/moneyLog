@@ -29,6 +29,7 @@ export class API_URL {
   static readonly user = {
     register: () => `${API_URL.baseURL}/user`,
     login: () => `${API_URL.baseURL}/user/login`,
+    verify: () => `${API_URL.baseURL}/user/verify`,
     activated: (params?: { token?: string }) =>
       `${API_URL.baseURL}/user/activated${params ? builderQueryString(params) : ""}`,
   };
