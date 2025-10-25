@@ -5,6 +5,7 @@
       "name": "web",
       "dependencies": {
         "@lottiefiles/dotlottie-svelte": "^0.8.5",
+        "@lucide/svelte": "^0.546.0",
         "daisyui": "^5.3.7",
         "formsnap": "^2.0.1",
         "svelte-sonner": "^1.0.5",
@@ -112,6 +113,8 @@
     "@lottiefiles/dotlottie-svelte": ["@lottiefiles/dotlottie-svelte@0.8.5", "", { "dependencies": { "@lottiefiles/dotlottie-web": "0.54.1" }, "peerDependencies": { "svelte": "^4.0.0" } }, "sha512-Bz+iw8Y/fQLbNVgJs5mTRAJXq1VyMSgU1Eoz5+jAoLGTgzaoqaB26yO6knuGno08kjFTvZ1FWyIe9E5OEILB5Q=="],
 
     "@lottiefiles/dotlottie-web": ["@lottiefiles/dotlottie-web@0.54.1", "", {}, "sha512-Xq6wKvQ1hJUAalctrrVSZNIPStJBEAzSsQl4rtinPEfl6LBZdos0GGfVLdyGjZZYODzoG28SMN09YKAC9Kz6RQ=="],
+
+    "@lucide/svelte": ["@lucide/svelte@0.546.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-qFVQ+BUJH9Swns7cag3Wik7VqKZfN2hwDZ2VazbZJc8VSqI0kgOZCZ2OVwrvNxdkl8Mw9M9H1ROB0BXh/WH/sA=="],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "", {}, "sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww=="],
 

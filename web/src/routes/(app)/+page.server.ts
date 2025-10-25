@@ -6,6 +6,7 @@ import API_URL from "$lib/utils/API_URL";
 import type { ApiErrorResponse } from "$lib/utils/api-response.types";
 import { fail } from "sveltekit-superforms";
 import { isRedirect, redirect } from "@sveltejs/kit";
+import { env } from "$env/dynamic/private";
 
 export const load = (async ({ parent }) => {
   const layoutData = await parent();
@@ -181,6 +182,9 @@ export const actions = {
   logout: async ({ cookies }) => {
     cookies.delete("auth_token", {
       path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: env.NODE_ENV === "production",
     });
 
     throw redirect(303, "/");

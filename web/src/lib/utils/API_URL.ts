@@ -16,7 +16,7 @@ const builderQueryString = (params: Record<string, any>): string => {
 };
 
 export class API_URL {
-  private static baseURL = getBaseURL();
+  private static baseURL: string = getBaseURL();
 
   static setBaseURL(url: string): void {
     this.baseURL = url;
@@ -37,6 +37,29 @@ export class API_URL {
   static readonly token = {
     reset: () => `${API_URL.baseURL}/token/reset`,
     generate: () => `${API_URL.baseURL}/token`,
+  };
+
+  static readonly expense = {
+    getAll: (params?: {
+      offset?: number;
+      limit?: number;
+      sort?: string;
+      order_by?: string;
+      category?: string;
+      name?: string;
+      minAmount?: number;
+      maxAmount?: number;
+      startDate?: string;
+      endDate?: string;
+      date?: string;
+    }) =>
+      `${API_URL.baseURL}/expense${params ? builderQueryString(params) : ""}`,
+
+    delete: (id: string) => `${API_URL.baseURL}/expense/${id}`,
+    get: (id: string) => `${API_URL.baseURL}/expense/${id}`,
+    update: (id: string) => `${API_URL.baseURL}/expense/${id}`,
+    top: () => `${API_URL.baseURL}/expense/top`,
+    insert: () => `${API_URL.baseURL}/expense`,
   };
 }
 
