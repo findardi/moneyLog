@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@lottiefiles/dotlottie-svelte": "^0.8.5",
+		"@lucide/svelte": "^0.546.0",
 		"daisyui": "^5.3.7",
 		"formsnap": "^2.0.1",
 		"svelte-sonner": "^1.0.5",

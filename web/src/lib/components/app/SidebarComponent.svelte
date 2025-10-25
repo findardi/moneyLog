@@ -43,7 +43,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex-grow flex flex-col px-4 space-y-6 overflow-y-auto">
+    <div class="flex-grow flex flex-col px-4 space-y-6 overflow-y-auto" data-sveltekit-preload-data="off">
         <!-- Main Menu -->
         <div class="space-y-2">
             <div class="flex items-center gap-2 mb-3">

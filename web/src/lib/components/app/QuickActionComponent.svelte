@@ -9,7 +9,7 @@
 
 <div class="space-y-3">
     <a
-        href="/transactions?action=new"
+        href="/transactions"
         class="block w-full bg-green-200 border-3 border-stone-900 p-4 md:p-5
                shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
                hover:shadow-[6px_6px_0px_0px_rgba(41,37,36,1)]
