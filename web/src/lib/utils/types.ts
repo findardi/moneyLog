@@ -27,3 +27,26 @@ export interface topExpense {
   total?: number;
   amount?: number;
 }
+
+export interface AlertNotification {
+    userId: number;
+    id: string;
+    currentSpending: number;
+    maxSpending: number;
+    alertPercentage: number;
+    currentPercentage: number;
+    message: string;
+    isAlert: boolean;
+    timestamp: string;
+}
+
+export interface ErrorMessage {
+    message: string;
+    details?: string;
+}
+
+export interface spendingLimit {
+  period: string;
+  amount: number;
+  alertPercentage: number;
+}

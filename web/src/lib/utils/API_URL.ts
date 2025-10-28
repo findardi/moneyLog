@@ -61,6 +61,17 @@ export class API_URL {
     top: () => `${API_URL.baseURL}/expense/top`,
     insert: () => `${API_URL.baseURL}/expense`,
   };
+
+  static readonly dashboard = {
+    notification: () => `${API_URL.baseURL}/periode-limit/notifications/stream`,
+  }
+
+  static readonly limit = {
+    insert: () => `${API_URL.baseURL}/spending`,
+    delete: (id: string) => `${API_URL.baseURL}/spending/${id}`,
+    update: (id: string) => `${API_URL.baseURL}/spending/${id}`,
+    get: () => `${API_URL.baseURL}/spending`,
+  }
 }
 
 export type APIEndpoint = () => string;

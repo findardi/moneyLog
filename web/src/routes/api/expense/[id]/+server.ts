@@ -8,9 +8,9 @@ export const GET: RequestHandler = async ({params, fetch}) => {
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to fetch expense detail: ${response.status}`);
-      }
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch expense detail: ${response.status}`);
+        }
     
       const result = await response.json();
       const body = result.body || result;

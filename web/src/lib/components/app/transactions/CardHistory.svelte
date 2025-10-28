@@ -92,7 +92,7 @@
         </div>
 
         <!-- Amount -->
-        <div class="col-span-4 md:col-span-3 text-right">
+        <div class="col-span-4 md:col-span-3 text-right mr-2">
             <p class="text-sm font-bold text-stone-900 truncate">
                 {formatCurrency(amount)}
             </p>
