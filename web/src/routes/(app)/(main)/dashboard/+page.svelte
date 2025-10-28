@@ -1,6 +1,9 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
+    import AlertDashComponent from "$lib/components/app/dashboard/AlertDashComponent.svelte";
+    import type { PageProps } from "./$types";
+    let {data}: PageProps= $props();
 </script>
 
 <div class="flex flex-col space-y-2">
@@ -19,5 +22,16 @@
         </div>
     </div>
     <!-- content -->
-    <div></div>
+    <div class="w-full h-full flex items-center justify-center">
+        <div class="w-full max-w-5xl">
+            <div class="grid grid-rows-3 gap-3 space-y-2">
+                <!-- alert notification -->
+                <div class="w-full h-full py-1.5">
+                    <AlertDashComponent formCreate={data.spendingCreate} formEdit={data.spendingUpdate}/>
+                </div>
+                <!-- dashboard components -->
+                <div class=" row-span-2"></div>
+            </div>
+        </div>
+    </div>
 </div>
