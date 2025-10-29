@@ -1,4 +1,4 @@
-import API_URL from "$lib/utils/API_URL";
+import API_URL from "$lib/utils/api-url";
 
 export async function validateToken(
   fetch: typeof globalThis.fetch,

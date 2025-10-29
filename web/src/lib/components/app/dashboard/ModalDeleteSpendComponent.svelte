@@ -1,4 +1,8 @@
 <script lang="ts">
+    import {
+        handleBackdropClick,
+        handleKeydown,
+    } from "$lib/utils/common/handle";
     import { X, AlertTriangle } from "@lucide/svelte";
 
     interface Props {
@@ -14,29 +18,15 @@
         spendingId = "",
         isLoading = false,
     }: Props = $props();
-
-    // Handle escape key
-    const handleKeydown = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && isOpen) {
-            onClose();
-        }
-    };
-
-    // Handle backdrop click
-    const handleBackdropClick = (e: MouseEvent) => {
-        if (e.target === e.currentTarget) {
-            onClose();
-        }
-    };
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
+<svelte:window onkeydown={(e) => handleKeydown(e, onClose, isOpen)} />
 
 {#if isOpen}
     <!-- Backdrop -->
     <div
         class="fixed inset-0 bg-stone-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onclick={handleBackdropClick}
+        onclick={(e) => handleBackdropClick(e, onClose)}
         role="presentation"
     >
         <div
@@ -83,10 +73,14 @@
 
             <div class="p-6">
                 <p class="text-stone-900 font-medium text-base">
-                    Are you sure you want to delete this <strong class="font-bold">spending limit alert</strong>?
+                    Are you sure you want to delete this <strong
+                        class="font-bold">spending limit alert</strong
+                    >?
                 </p>
                 <p class="text-stone-600 text-sm mt-2">
-                    This action cannot be undone. Your spending limit configuration will be permanently removed and you will no longer receive alerts.
+                    This action cannot be undone. Your spending limit
+                    configuration will be permanently removed and you will no
+                    longer receive alerts.
                 </p>
             </div>
 

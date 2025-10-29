@@ -1,7 +1,15 @@
 <script lang="ts">
     import { page } from "$app/state";
+    import type { SuperValidated } from "sveltekit-superforms";
     import ActivatedComponent from "./ActivatedComponent.svelte";
     import QuickActionComponent from "./QuickActionComponent.svelte";
+    import type { activationDTO } from "$lib/schema/user.schema";
+
+    interface homeProps {
+        form: SuperValidated<activationDTO>;
+    }
+
+    let { form }: homeProps = $props();
 
     const username = $derived(page.data.username || "Friends");
     const isActive = $derived(page.data.isActive || false);
@@ -141,7 +149,7 @@
                     {#if isActive}
                         <QuickActionComponent />
                     {:else}
-                        <ActivatedComponent />
+                        <ActivatedComponent {form} />
                     {/if}
                 </div>
             </div>

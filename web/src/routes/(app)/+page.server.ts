@@ -2,7 +2,7 @@ import { activationSchema } from "$lib/schema/user.schema";
 import { zod4 } from "sveltekit-superforms/adapters";
 import type { Actions, PageServerLoad } from "./$types";
 import { superValidate } from "sveltekit-superforms/server";
-import API_URL from "$lib/utils/API_URL";
+import API_URL from "$lib/utils/api-url";
 import type { ApiErrorResponse } from "$lib/utils/api-response.types";
 import { fail } from "sveltekit-superforms";
 import { isRedirect, redirect } from "@sveltejs/kit";

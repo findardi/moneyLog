@@ -2,6 +2,8 @@
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
     import { Search, History, X } from "@lucide/svelte";
+    import SelectComponent from "$lib/components/form/SelectComponent.svelte";
+    import InputComponent from "$lib/components/form/InputComponent.svelte";
 
     // Categories untuk search by
     let searchCategories = [
@@ -28,25 +30,24 @@
         "Insurance",
     ];
 
-    let selectedCategory = $derived(
-        page.url.searchParams.get("search_category") || "",
-    );
-    let orderBy = $derived(page.url.searchParams.get("order_by") || "");
-    let sortOrder = $derived(page.url.searchParams.get("sort") || "");
-    let searchValue = $derived(page.url.searchParams.get("search") || "");
+    let selectedCategory = $state(page.url.searchParams.get("search_category") || "");
+    let orderBy = $state(page.url.searchParams.get("order_by") || "");
+    let sortOrder = $state(page.url.searchParams.get("sort") || "");
+    let searchValue = $state(page.url.searchParams.get("search") || "");
 
-    let searchPlaceholder = $derived(
-        selectedCategory
-            ? `Search ${selectedCategory.replace("_", " ")}...`
-            : "Search...",
-    );
+    let sortOptions = [
+        { label: "Ascending", value: "asc" },
+        { label: "Descending", value: "desc" },
+    ];
 
-    // Function to reset all filters
     function resetFilters() {
+        selectedCategory = "";
+        orderBy = "";
+        sortOrder = "";
+        searchValue = "";
         goto(page.url.pathname);
     }
 
-    // Check if any filter is active
     let hasActiveFilters = $derived(
         !!(selectedCategory || orderBy || sortOrder || searchValue),
     );
@@ -68,125 +69,77 @@
             <!-- Category Select -->
             <div class="flex flex-col space-y-2">
                 <div class="flex space-x-2">
-                    <div class="relative">
-                        <select
-                            name="search_category"
+                    <div class="w-32">
+                        <SelectComponent
+                            data={searchCategories}
                             bind:value={selectedCategory}
-                            class="px-2 py-1 text-sm border-2 border-stone-900 bg-white
-							font-medium text-stone-900 cursor-pointer
-							hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-stone-900
-							transition-colors appearance-none pr-6 rounded-md"
-                        >
-                            <option disabled selected value="">Search By</option
-                            >
-                            {#each searchCategories as item}
-                                <option value={item.value}>{item.label}</option>
-                            {/each}
-                        </select>
-                        <!-- custom caret -->
-                        <div
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-700 pointer-events-none"
-                        >
-                            ▼
-                        </div>
+                            searchable={false}
+                            clearable={true}
+                            nameField="Search By"
+                        />
+                        <input type="hidden" name="search_category" value={selectedCategory} />
                     </div>
 
                     <!-- Order By Select -->
-                    <div class="relative">
-                        <select
-                            name="order_by"
+                    <div class="w-36">
+                        <SelectComponent
+                            data={orderByCategories}
                             bind:value={orderBy}
-                            class="px-2 py-1 text-sm border-2 border-stone-900 bg-white
-							font-medium text-stone-900 cursor-pointer
-							hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-stone-900
-							transition-colors appearance-none pr-6 rounded-md"
-                        >
-                            <option disabled selected value="">Order by</option>
-                            {#each orderByCategories as item}
-                                <option value={item.value}>{item.label}</option>
-                            {/each}
-                        </select>
-                        <!-- custom caret -->
-                        <div
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-700 pointer-events-none"
-                        >
-                            ▼
-                        </div>
+                            nameField="Order by"
+                            searchable={false}
+                            clearable={true}
+                        />
+                        <input type="hidden" name="order_by" value={orderBy} />
                     </div>
 
                     <!-- Sort Select -->
-                    <div class="relative">
-                        <select
-                            name="sort"
+                    <div class="w-36">
+                        <SelectComponent
+                            data={sortOptions}
                             bind:value={sortOrder}
-                            class="px-2 py-1 text-sm border-2 border-stone-900 bg-white
-							font-medium text-stone-900 cursor-pointer
-							hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-stone-900
-							transition-colors appearance-none pr-6 rounded-md"
-                        >
-                            <option disabled selected value="">Sort</option>
-                            <option value="asc">Ascending</option>
-                            <option value="desc">Descending</option>
-                        </select>
-                        <!-- custom caret -->
-                        <div
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-700 pointer-events-none"
-                        >
-                            ▼
-                        </div>
+                            nameField="Sort"
+                            searchable={false}
+                            clearable={true}
+                        />
+                        <input type="hidden" name="sort" value={sortOrder} />
                     </div>
                 </div>
                 <div class="flex space-x-1">
                     <!-- Dynamic Search Input Based on Selected Category -->
                     {#if selectedCategory === "category"}
                         <!-- Category Select Dropdown -->
-                        <div class="relative">
-                            <select
-                                name="search"
+                        <div class="w-48">
+                            <SelectComponent
+                                data={categoriesSelect}
                                 bind:value={searchValue}
-                                class="px-2 py-1 text-sm border-2 border-stone-900 bg-white
-                                font-medium text-stone-900 cursor-pointer
-                                hover:bg-stone-50 focus:outline-none focus:ring-2 focus:ring-stone-900
-                                transition-colors appearance-none pr-6 rounded-md"
-                            >
-                                <option disabled selected value=""
-                                    >Select Category</option
-                                >
-                                {#each categoriesSelect as category}
-                                    <option value={category}>{category}</option>
-                                {/each}
-                            </select>
-                            <!-- custom caret -->
-                            <div
-                                class="absolute right-2 top-1/2 -translate-y-1/2 text-stone-700 pointer-events-none"
-                            >
-                                ▼
-                            </div>
+                                nameField="Select Category"
+                                searchable={true}
+                                clearable={true}
+                            />
+                            <input type="hidden" name="search" value={searchValue} />
                         </div>
                     {:else if selectedCategory === "name"}
                         <!-- Text Input for Name -->
-                        <input
-                            type="text"
-                            name="search"
-                            bind:value={searchValue}
-                            placeholder="Enter name..."
-                            class="px-2 py-1 text-sm border-2 border-stone-900 bg-white
-                                font-medium text-stone-900 placeholder:text-stone-400
-                                focus:outline-none focus:ring-2 focus:ring-stone-900
-                                transition-all rounded-md"
-                        />
+                        <div class="w-48">
+                            <InputComponent
+                                name="search"
+                                bind:value={searchValue}
+                                nameField="name"
+                                placeholder="Enter name..."
+                            />
+                        </div>
                     {/if}
 
                     <button
                         type="submit"
-                        class="px-3 py-1 text-sm border-2 border-stone-900 bg-stone-900
+                        class="px-4 py-3 text-sm border-3 border-stone-900 bg-stone-900
 						text-white font-bold cursor-pointer
 						hover:bg-stone-800 transition-colors
-						focus:outline-none focus:ring-2 focus:ring-stone-900
-						shadow-[2px_2px_0px_0px_rgba(41,37,36,0.3)]
-						hover:shadow-[1px_1px_0px_0px_rgba(41,37,36,0.3)]
-						hover:translate-x-[1px] hover:translate-y-[1px]
-						flex items-end gap-1 rounded-md"
+						focus:outline-none
+						shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
+						hover:shadow-[3px_3px_0px_0px_rgba(41,37,36,1)]
+						hover:translate-x-[-1px] hover:translate-y-[-1px]
+						flex items-center gap-1"
                     >
                         <Search size={16} />
                         Search
@@ -196,14 +149,14 @@
                         <button
                             type="button"
                             onclick={resetFilters}
-                            class="px-3 py-1 text-sm border-2 border-stone-900 bg-white
+                            class="px-4 py-3 text-sm border-3 border-stone-900 bg-white
                             text-stone-900 font-bold cursor-pointer
                             hover:bg-stone-100 transition-colors
-                            focus:outline-none focus:ring-2 focus:ring-stone-900
-                            shadow-[2px_2px_0px_0px_rgba(41,37,36,0.3)]
-                            hover:shadow-[1px_1px_0px_0px_rgba(41,37,36,0.3)]
-                            hover:translate-x-[1px] hover:translate-y-[1px]
-                            flex items-end gap-1 rounded-md"
+                            focus:outline-none
+                            shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
+                            hover:shadow-[3px_3px_0px_0px_rgba(41,37,36,1)]
+                            hover:translate-x-[-1px] hover:translate-y-[-1px]
+                            flex items-center gap-1"
                         >
                             <X size={16} />
                             Reset
@@ -215,16 +168,3 @@
     </div>
 </div>
 
-<style>
-    select {
-        /* hilangin default caret */
-        background-image: none;
-    }
-    option {
-        background-color: white;
-        color: #292524;
-    }
-    select:focus {
-        outline: none;
-    }
-</style>

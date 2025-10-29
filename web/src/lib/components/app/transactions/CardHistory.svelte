@@ -4,6 +4,7 @@
     import { expenseStore } from "$lib/stores/expense.svelte";
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
+    import { formatCurrency } from "$lib/utils/common/format";
 
     interface cardProps {
         id?: string;
@@ -14,25 +15,6 @@
     }
 
     let { id, name, amount, category, spentAt }: cardProps = $props();
-
-    // Format currency
-    const formatCurrency = (value: number = 0) => {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(value);
-    };
-
-    // Format date
-    const formatDate = (date?: Date) => {
-        if (!date) return "-";
-        return new Intl.DateTimeFormat("id-ID", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-        }).format(new Date(date));
-    };
 
     let isModalOpen = $state(false);
     let selectedItem = $state({ id: "", name: "" });
@@ -54,8 +36,8 @@
         expenseStore.setIsDetail(true);
         const pathname = page.url.pathname;
         const currentParams = new URLSearchParams(page.url.searchParams);
-        currentParams.set('detailId', id);
-        currentParams.set('t', Date.now().toString());
+        currentParams.set("detailId", id);
+        currentParams.set("t", Date.now().toString());
         goto(`${pathname}?${currentParams.toString()}`, { replaceState: true });
     };
 
@@ -63,8 +45,8 @@
         expenseStore.setIsEdit(true);
         const pathname = page.url.pathname;
         const currentParams = new URLSearchParams(page.url.searchParams);
-        currentParams.set('detailId', id);
-        currentParams.set('t', Date.now().toString());
+        currentParams.set("detailId", id);
+        currentParams.set("t", Date.now().toString());
         goto(`${pathname}?${currentParams.toString()}`, { replaceState: true });
     };
 </script>
@@ -94,7 +76,7 @@
         <!-- Amount -->
         <div class="col-span-4 md:col-span-3 text-right mr-2">
             <p class="text-sm font-bold text-stone-900 truncate">
-                {formatCurrency(amount)}
+                {formatCurrency(amount || 0)}
             </p>
         </div>
 

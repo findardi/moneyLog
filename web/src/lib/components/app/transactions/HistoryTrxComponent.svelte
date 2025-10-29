@@ -2,17 +2,10 @@
     import { goto as navigate } from "$app/navigation";
     import { page } from "$app/state";
     import { expenseStore } from "$lib/stores/expense.svelte";
+    import { formatCurrency } from "$lib/utils/common/format";
     import CardHistory from "./CardHistory.svelte";
     import SearchComponent from "./SearchComponent.svelte";
     import { ChevronLeft, ChevronRight } from "@lucide/svelte";
-
-    const formatCurrency = (value: number = 0) => {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(value);
-    };
 
     let currentOffset = $derived(
         parseInt(page.url.searchParams.get("offset") || "0"),
@@ -79,7 +72,7 @@
             <!-- Transaction List -->
             <div class="space-y-0.5 mb-4">
                 {#if expenseStore.expenses.length === 0}
-                    <div class="text-center text-stone-600 py-8 font-bold" >
+                    <div class="text-center text-stone-600 py-8 font-bold">
                         No transactions found
                     </div>
                 {:else}

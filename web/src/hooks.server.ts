@@ -1,5 +1,5 @@
 import { validateToken } from "$lib/stores/users";
-import API_URL from "$lib/utils/API_URL";
+import API_URL from "$lib/utils/api-url";
 import type { Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {

@@ -13,6 +13,8 @@
     import { page } from "$app/state";
     import { goto } from "$app/navigation";
     import type { expenseDetail } from "$lib/utils/types";
+    import { handleFailure } from "$lib/utils/common/handle";
+    import InputComponent from "$lib/components/form/InputComponent.svelte";
 
     let expense = $derived(expenseStore.expenseDetail);
     let isLoading = $state(false);
@@ -21,21 +23,22 @@
 
     $effect(() => {
         if (!id) return;
-        
+
         isLoading = true;
         error = null;
-        
+
         setTimeout(() => {
             fetch(`/api/expense/${id}`)
-                .then(res => {
-                    if (!res.ok) throw new Error("Failed to fetch expense detail");
+                .then((res) => {
+                    if (!res.ok)
+                        throw new Error("Failed to fetch expense detail");
                     return res.json();
                 })
-                .then(data => {
+                .then((data) => {
                     expenseStore.setExpenseDetail(data as expenseDetail);
                     isLoading = false;
                 })
-                .catch(err => {
+                .catch((err) => {
                     error = err.message;
                     isLoading = false;
                 });
@@ -57,34 +60,19 @@
             if (result.type === "success") {
                 handleClose();
                 toast.success("update Success");
-                if (typeof window !== 'undefined' && (window as any).refreshQuickStat) {
+                if (
+                    typeof window !== "undefined" &&
+                    (window as any).refreshQuickStat
+                ) {
                     (window as any).refreshQuickStat();
                 }
             } else if (result.type === "failure") {
-                handleLoginFailure(result.data);
+                handleFailure(result.data, "Update Transaction Failed");
             }
         },
     });
 
     const { form: formData, enhance, delayed, submitting, reset } = form;
-
-    function handleLoginFailure(data: any) {
-        if (data?.apiError) {
-            const apiError = data.apiError as ApiErrorResponse;
-            toast.error(apiError.message, {
-                duration: 5000,
-            });
-            return;
-        }
-
-        let errorMessage = "update failed";
-        if (typeof data?.message === "string") {
-            errorMessage = data.message;
-        } else if (data?.form?.message) {
-            errorMessage = data.form.message;
-        }
-        toast.error(errorMessage);
-    }
 
     let nameValue = $state($formData.name ?? "");
     let amountValue = $state<number | undefined>($formData.amount);
@@ -101,10 +89,12 @@
         expenseStore.setIsEdit(false);
         const pathname = page.url.pathname;
         const currentParams = new URLSearchParams(page.url.searchParams);
-        currentParams.delete('detailId');
-        currentParams.delete('t');
+        currentParams.delete("detailId");
+        currentParams.delete("t");
         const queryString = currentParams.toString();
-        goto(`${pathname}${queryString ? '?' + queryString : ''}`, { replaceState: false });
+        goto(`${pathname}${queryString ? "?" + queryString : ""}`, {
+            replaceState: false,
+        });
     };
 
     const handleCancel = () => {
@@ -132,7 +122,7 @@
                 <X size={20} />
             </button>
         </div>
-        
+
         {#if isLoading}
             <div class="p-3 flex items-center justify-center">
                 <span class="loading loading-spinner loading-xl"></span>
@@ -142,52 +132,45 @@
                 <p class="text-sm text-red-600">{error}</p>
             </div>
         {:else if expense}
-        <div class="w-full">
-            <form
-                action="?/update"
-                method="post"
-                use:enhance
-                class="w-full space-y-1"
-            >
-                <div class="w-full grid grid-cols-2 gap-2 p-2">
-                    <Field {form} name="name">
-                        <Control>
-                            {#snippet children({ props })}
-                                <input
-                                    type="text"
-                                    class="w-full px-2 py-1 text-sm border-2 border-stone-900
-                                           focus:outline-none focus:shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
-                                           transition-all duration-200 font-medium
-                                           placeholder:text-stone-400"
+            <div class="w-full">
+                <form
+                    action="?/update"
+                    method="post"
+                    use:enhance
+                    class="w-full space-y-1"
+                >
+                    <div class="w-full grid grid-cols-2 gap-2 p-2">
+                        <Field {form} name="name">
+                            <Control>
+                                {#snippet children({ props })}
+                                <InputComponent
+                                    bind:value={nameValue}
+                                    nameField="Name"
                                     placeholder={expense?.name}
                                     {...props}
-                                    bind:value={nameValue}
                                 />
-                            {/snippet}
-                        </Control>
-                    </Field>
-                    <Field {form} name="amount">
-                        <Control>
-                            {#snippet children({ props })}
-                                <input
+                                {/snippet}
+                            </Control>
+                        </Field>
+                        <Field {form} name="amount">
+                            <Control>
+                                {#snippet children({ props })}
+                                <InputComponent
                                     type="number"
-                                    class="w-full px-2 py-1 text-sm border-2 border-stone-900
-                                           focus:outline-none focus:shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
-                                           transition-all duration-200 font-medium
-                                           placeholder:text-stone-400"
+                                    bind:value={amountValue}
+                                    nameField="Amount"
                                     placeholder={String(expense?.amount || "")}
                                     {...props}
-                                    bind:value={amountValue}
                                 />
-                            {/snippet}
-                        </Control>
-                    </Field>
-                    <input type="hidden" bind:value={idValue} name="id" />
-                </div>
+                                {/snippet}
+                            </Control>
+                        </Field>
+                        <input type="hidden" bind:value={idValue} name="id" />
+                    </div>
 
-                <div class="flex gap-2 p-2">
-                    <button
-                        class="w-full px-2 py-1.5 bg-stone-900 text-white font-bold text-sm
+                    <div class="flex gap-2 p-2">
+                        <button
+                            class="w-full px-2 py-1.5 bg-stone-900 text-white font-bold text-sm
                                border-2 border-stone-900
                                shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
                                hover:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
@@ -197,23 +180,24 @@
                                disabled:hover:shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
                                disabled:hover:translate-x-0 disabled:hover:translate-y-0
                                uppercase tracking-wide"
-                        type="submit"
-                        disabled={$submitting}
-                    >
-                        {#if $submitting}
-                            <span
-                                class="flex items-center justify-center gap-2"
-                            >
-                                <span class="loading loading-spinner loading-sm"
-                                ></span>
-                                Sending...
-                            </span>
-                        {:else}
-                            Update
-                        {/if}
-                    </button>
-                    <button
-                        class="w-full px-1 py-1.5 bg-white text-stone-900 font-bold text-sm
+                            type="submit"
+                            disabled={$submitting}
+                        >
+                            {#if $submitting}
+                                <span
+                                    class="flex items-center justify-center gap-2"
+                                >
+                                    <span
+                                        class="loading loading-spinner loading-sm"
+                                    ></span>
+                                    Sending...
+                                </span>
+                            {:else}
+                                Update
+                            {/if}
+                        </button>
+                        <button
+                            class="w-full px-1 py-1.5 bg-white text-stone-900 font-bold text-sm
                                border-2 border-stone-900
                                shadow-[2px_2px_0px_0px_rgba(41,37,36,1)]
                                hover:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
@@ -221,15 +205,15 @@
                                transition-all duration-200
                                disabled:opacity-50 disabled:cursor-not-allowed
                                uppercase tracking-wide"
-                        type="button"
-                        disabled={$submitting}
-                        onclick={handleCancel}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
+                            type="button"
+                            disabled={$submitting}
+                            onclick={handleCancel}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
         {:else}
             <div class="p-3 flex items-center justify-center">
                 <p class="text-sm text-stone-600">No data available</p>
