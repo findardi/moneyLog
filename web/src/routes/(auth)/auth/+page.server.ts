@@ -2,14 +2,12 @@ import { fail, superValidate } from "sveltekit-superforms";
 import type { Actions, PageServerLoad } from "./$types";
 import { zod4 } from "sveltekit-superforms/adapters";
 import { loginSchema, registerSchema } from "$lib/schema/user.schema";
-import API_URL from "$lib/utils/API_URL";
+import API_URL from "$lib/utils/api-url";
 import { isRedirect, redirect } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
 import type { ApiErrorResponse } from "$lib/utils/api-response.types";
 
-export const load = (async ({ url }) => {
-  const tab = url.searchParams.get("tab") || "register";
-  const schema = tab === "register" ? registerSchema : loginSchema;
+export const load = (async () => {
   return {
     loginForm: await superValidate(zod4(loginSchema)),
     registerForm: await superValidate(zod4(registerSchema)),

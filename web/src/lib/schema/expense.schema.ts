@@ -1,7 +1,6 @@
 import z from "zod";
 
 export const categoryEnum = z.enum([
-  "",
   "Food & Drinks",
   "Tickets",
   "Shopping",

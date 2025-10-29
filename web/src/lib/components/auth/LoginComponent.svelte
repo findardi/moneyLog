@@ -1,10 +1,12 @@
 <script lang="ts">
     import { loginSchema, type loginDTO } from "$lib/schema/user.schema";
     import type { ApiErrorResponse } from "$lib/utils/api-response.types";
+    import { handleFailure } from "$lib/utils/common/handle";
     import { Control, Field, FieldErrors, Label } from "formsnap";
     import { toast } from "svelte-sonner";
     import { superForm, type SuperValidated } from "sveltekit-superforms";
     import { zod4Client } from "sveltekit-superforms/adapters";
+    import InputComponent from "../form/InputComponent.svelte";
 
     interface loginProps {
         actions?: string;
@@ -23,35 +25,12 @@
             if (result.type === "redirect") {
                 toast.success("Login Success");
             } else if (result.type === "failure") {
-                handleLoginFailure(result.data);
+                handleFailure(result.data, "Login Failed");
             }
         },
     });
 
-    const { form: formData, enhance, delayed, submitting, reset } = form;
-
-    function handleLoginFailure(data: any) {
-        if (data?.apiError) {
-            const apiError = data.apiError as ApiErrorResponse;
-            toast.error(apiError.message, {
-                duration: 5000,
-            });
-            return;
-        }
-
-        let errorMessage = "Login failed";
-        if (typeof data?.message === "string") {
-            errorMessage = data.message;
-        } else if (data?.form?.message) {
-            errorMessage = data.form.message;
-        }
-        toast.error(errorMessage);
-    }
-
-    function handleCancel() {
-        reset();
-        toast.info("form cleared");
-    }
+    const { form: formData, enhance, submitting } = form;
 </script>
 
 <div class="w-full">
@@ -60,20 +39,12 @@
             <Field {form} name="email">
                 <Control>
                     {#snippet children({ props })}
-                        <Label
-                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                            >Email</Label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-3 border-3 border-stone-900
-                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                   transition-all duration-200 font-medium
-                                   placeholder:text-stone-400"
-                            placeholder="user@gmail.com"
-                            {...props}
-                            bind:value={$formData.email}
-                        />
+                    <InputComponent
+                        nameField="Email"
+                        placeholder="user@gmail.com"
+                        {...props}
+                        bind:value={$formData.email}
+                    />
                     {/snippet}
                 </Control>
                 <FieldErrors class="mt-2 text-sm font-bold text-red-600" />
@@ -82,20 +53,13 @@
             <Field {form} name="password">
                 <Control>
                     {#snippet children({ props })}
-                        <Label
-                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                            >Password</Label
-                        >
-                        <input
-                            type="password"
-                            class="w-full px-4 py-3 border-3 border-stone-900
-                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                   transition-all duration-200 font-medium
-                                   placeholder:text-stone-400"
-                            placeholder="password"
-                            {...props}
-                            bind:value={$formData.password}
-                        />
+                    <InputComponent
+                        type="password"
+                        nameField="Password"
+                        placeholder="password"
+                        {...props}
+                        bind:value={$formData.password}
+                    />
                     {/snippet}
                 </Control>
                 <FieldErrors class="mt-2 text-sm font-bold text-red-600" />

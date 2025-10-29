@@ -1,21 +1,20 @@
 <script lang="ts">
     import { expenseStore } from "$lib/stores/expense.svelte";
+    import { formatCurrency } from "$lib/utils/common/format";
     import type { topExpense } from "$lib/utils/types";
     import { X, Tag } from "@lucide/svelte";
-    import { invalidateAll } from "$app/navigation";
 
     let topExpenseData = $derived(expenseStore.topExpense);
     let isLoading = $state<boolean>(false);
     let error = $state<string | null>(null);
     let refreshTrigger = $state(0);
-    
-    // Function to fetch top expenses
+
     const fetchTopExpenses = async () => {
         isLoading = true;
         error = null;
-        
+
         try {
-            const res = await fetch('/api/expense');
+            const res = await fetch("/api/expense");
             if (!res.ok) throw new Error("Failed to fetch top expenses");
             const data = await res.json();
             expenseStore.setTopExpense(data as topExpense[]);
@@ -25,27 +24,17 @@
             isLoading = false;
         }
     };
-    
-    // Initial fetch and reactive to refreshTrigger changes
+
     $effect(() => {
-        refreshTrigger; // Track this to make effect reactive
+        refreshTrigger;
         fetchTopExpenses();
     });
-    
-    // Expose refresh function to window for external triggers
-    if (typeof window !== 'undefined') {
+
+    if (typeof window !== "undefined") {
         (window as any).refreshQuickStat = () => {
             refreshTrigger++;
         };
     }
-
-    const formatCurrency = (value: number = 0) => {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(value);
-    };
 </script>
 
 <div class="w-full h-full">
@@ -59,7 +48,6 @@
             class="bg-stone-900 text-white px-3 py-2 flex justify-between items-center border-b-2 border-stone-900"
         >
             <h2 class="text-sm font-bold">Top Expense Categories</h2>
-            
         </div>
 
         <!-- Content -->
@@ -81,7 +69,7 @@
                         </div>
                         <div class="flex items-center gap-1 text-stone-700">
                             <span class="font-semibold text-xs"
-                                >{formatCurrency(cat.amount)}</span
+                                >{formatCurrency(cat.amount || 0)}</span
                             >
                             <span class="text-[10px] text-stone-500"
                                 >({cat.total}x)</span

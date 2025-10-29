@@ -1,10 +1,11 @@
 <script lang="ts">
     import { registerSchema, type registerDTO } from "$lib/schema/user.schema";
-    import type { ApiErrorResponse } from "$lib/utils/api-response.types";
+    import { handleFailure } from "$lib/utils/common/handle";
     import { Control, Field, FieldErrors, Label } from "formsnap";
     import { toast } from "svelte-sonner";
     import { superForm, type SuperValidated } from "sveltekit-superforms";
     import { zod4Client } from "sveltekit-superforms/adapters";
+    import InputComponent from "../form/InputComponent.svelte";
 
     interface registerProps {
         actions?: string;
@@ -32,30 +33,12 @@
                     }, 500);
                 }
             } else if (result.type === "failure") {
-                handleLoginFailure(result.data);
+                handleFailure(result.data, "Register Failed");
             }
         },
     });
 
-    const { form: formData, enhance, delayed, submitting, reset } = form;
-
-    function handleLoginFailure(data: any) {
-        if (data?.apiError) {
-            const apiError = data.apiError as ApiErrorResponse;
-            toast.error(apiError.message, {
-                duration: 5000,
-            });
-            return;
-        }
-
-        let errorMessage = "Register failed";
-        if (typeof data?.message === "string") {
-            errorMessage = data.message;
-        } else if (data?.form?.message) {
-            errorMessage = data.form.message;
-        }
-        toast.error(errorMessage);
-    }
+    const { form: formData, enhance, submitting, reset } = form;
 
     function handleCancel() {
         reset();
@@ -69,20 +52,12 @@
             <Field {form} name="email">
                 <Control>
                     {#snippet children({ props })}
-                        <Label
-                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                            >Email</Label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-2.5 border-3 border-stone-900
-                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                   transition-all duration-200 font-medium
-                                   placeholder:text-stone-400"
-                            placeholder="user@email.com"
-                            {...props}
-                            bind:value={$formData.email}
-                        />
+                    <InputComponent
+                        nameField="Email"
+                        placeholder="user@email.com"
+                        {...props}
+                        bind:value={$formData.email}
+                    />
                     {/snippet}
                 </Control>
                 <FieldErrors class="mt-1.5 text-xs font-bold text-red-600" />
@@ -91,20 +66,12 @@
             <Field {form} name="username">
                 <Control>
                     {#snippet children({ props })}
-                        <Label
-                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                            >Username</Label
-                        >
-                        <input
-                            type="text"
-                            class="w-full px-4 py-2.5 border-3 border-stone-900
-                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                   transition-all duration-200 font-medium
-                                   placeholder:text-stone-400"
-                            placeholder="unique username"
-                            {...props}
-                            bind:value={$formData.username}
-                        />
+                    <InputComponent
+                        nameField="Username"
+                        placeholder="unique username"
+                        {...props}
+                        bind:value={$formData.username}
+                    />
                     {/snippet}
                 </Control>
                 <FieldErrors class="mt-1.5 text-xs font-bold text-red-600" />
@@ -115,16 +82,8 @@
                     <Field {form} name="first_name">
                         <Control>
                             {#snippet children({ props })}
-                                <Label
-                                    class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                                    >First Name</Label
-                                >
-                                <input
-                                    type="text"
-                                    class="w-full px-4 py-2.5 border-3 border-stone-900
-                                           focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                           transition-all duration-200 font-medium
-                                           placeholder:text-stone-400"
+                                <InputComponent
+                                    nameField="First Name"
                                     placeholder="First"
                                     {...props}
                                     bind:value={$formData.first_name}
@@ -141,16 +100,8 @@
                     <Field {form} name="last_name">
                         <Control>
                             {#snippet children({ props })}
-                                <Label
-                                    class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                                    >Last Name</Label
-                                >
-                                <input
-                                    type="text"
-                                    class="w-full px-4 py-2.5 border-3 border-stone-900
-                                           focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                           transition-all duration-200 font-medium
-                                           placeholder:text-stone-400"
+                                <InputComponent
+                                    nameField="Last Name"
                                     placeholder="Last"
                                     {...props}
                                     bind:value={$formData.last_name}
@@ -167,19 +118,27 @@
             <Field {form} name="password">
                 <Control>
                     {#snippet children({ props })}
-                        <Label
-                            class="text-sm font-bold text-stone-900 uppercase tracking-wide"
-                            >Password</Label
-                        >
-                        <input
+                        <InputComponent
                             type="password"
-                            class="w-full px-4 py-2.5 border-3 border-stone-900
-                                   focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(41,37,36,1)]
-                                   transition-all duration-200 font-medium
-                                   placeholder:text-stone-400"
+                            nameField="Password"
                             placeholder="secret password"
                             {...props}
                             bind:value={$formData.password}
+                        />
+                    {/snippet}
+                </Control>
+                <FieldErrors class="mt-1.5 text-xs font-bold text-red-600" />
+            </Field>
+
+            <Field {form} name="confirmPassword">
+                <Control>
+                    {#snippet children({ props })}
+                        <InputComponent
+                            type="password"
+                            nameField="Confirm Password"
+                            placeholder="confirm password"
+                            {...props}
+                            bind:value={$formData.confirmPassword}
                         />
                     {/snippet}
                 </Control>

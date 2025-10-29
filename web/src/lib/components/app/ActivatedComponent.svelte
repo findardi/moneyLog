@@ -1,14 +1,23 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import { activationSchema } from "$lib/schema/user.schema";
+    import {
+        activationSchema,
+        type activationDTO,
+    } from "$lib/schema/user.schema";
     import type { ApiErrorResponse } from "$lib/utils/api-response.types";
     import { Control, Field, FieldErrors, Label } from "formsnap";
     import { toast } from "svelte-sonner";
-    import { superForm } from "sveltekit-superforms";
+    import { superForm, type SuperValidated } from "sveltekit-superforms";
     import { zod4Client } from "sveltekit-superforms/adapters";
     import { onDestroy } from "svelte";
+    import { handleFailure } from "$lib/utils/common/handle";
 
-    const formProp = $derived(page.data.activationForm);
+    interface activateProps {
+        form: SuperValidated<activationDTO>;
+    }
+
+    let { form: formProp }: activateProps = $props();
+
     let showTokenInput = $state(false);
     let isGeneratingToken = $state(false);
     let currentRegenerate = $state(0);
@@ -30,7 +39,7 @@
                     },
                 );
             } else if (result.type === "failure") {
-                handleVerifyFailure(result.data);
+                handleFailure(result.data, "Verification User Failed");
             }
         },
     });
@@ -44,7 +53,6 @@
         return `${minutes}:${seconds.toString().padStart(2, "0")}`;
     });
 
-    // Start countdown timer
     function startTimer() {
         timeLeft = 300; // Reset to 5 minutes
         tokenExpired = false;
@@ -77,24 +85,6 @@
     onDestroy(() => {
         stopTimer();
     });
-
-    function handleVerifyFailure(data: any) {
-        if (data?.apiError) {
-            const apiError = data.apiError as ApiErrorResponse;
-            toast.error(apiError.message, {
-                duration: 5000,
-            });
-            return;
-        }
-
-        let errorMessage = "Verification failed";
-        if (typeof data?.message === "string") {
-            errorMessage = data.message;
-        } else if (data?.form?.message) {
-            errorMessage = data.form.message;
-        }
-        toast.error(errorMessage);
-    }
 
     async function handleGetToken() {
         isGeneratingToken = true;
@@ -134,7 +124,6 @@
     }
 
     async function handleRegenerate() {
-        // Check if max regenerate limit reached
         if (currentRegenerate >= 3) {
             toast.error(
                 "Maximum regeneration limit reached (3/3). Please try again later.",

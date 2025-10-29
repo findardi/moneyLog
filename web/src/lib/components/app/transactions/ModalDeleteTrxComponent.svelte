@@ -1,4 +1,8 @@
 <script lang="ts">
+    import {
+        handleBackdropClick,
+        handleKeydown,
+    } from "$lib/utils/common/handle";
     import { X, AlertTriangle } from "@lucide/svelte";
 
     interface Props {
@@ -16,29 +20,15 @@
         itemId = "qq",
         isLoading = false,
     }: Props = $props();
-
-    // Handle escape key
-    const handleKeydown = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && isOpen) {
-            onClose();
-        }
-    };
-
-    // Handle backdrop click
-    const handleBackdropClick = (e: MouseEvent) => {
-        if (e.target === e.currentTarget) {
-            onClose();
-        }
-    };
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
+<svelte:window onkeydown={(e) => handleKeydown(e, onClose, isOpen)} />
 
 {#if isOpen}
     <!-- Backdrop -->
     <div
         class="fixed inset-0 bg-stone-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onclick={handleBackdropClick}
+        onclick={(e) => handleBackdropClick(e, onClose)}
         role="presentation"
     >
         <div
